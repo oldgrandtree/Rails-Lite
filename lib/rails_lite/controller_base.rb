@@ -10,6 +10,10 @@ class ControllerBase
   # setup the controller
   def initialize(req, res, route_params = {})
     @req, @res, @params = req, res, route_params
+    @session = Session.new(@req)
+
+    #needed?
+    @session.store_session(@res)
   end
 
   # populate the response with content
@@ -33,15 +37,28 @@ class ControllerBase
     @res["location"] = url
     @res.status = 302
     @already_built_response = true
+    @session.store_session(@res)
   end
 
   # use ERB and binding to evaluate templates
   # pass the rendered html to render_content
   def render(template_name)
+    raise "Double render error" if already_built_response?
+
+    @session.store_session(@res)
+
+    @res.body = ERB.new(File.read(path(template_name))).result(binding)
+    @res.content_type = "text/html"
+    @already_built_response = true
+  end
+
+  def path(template_name)
+    "views/#{self.class.name.underscore}/#{template_name}.html.erb"
   end
 
   # method exposing a `Session` object
   def session
+    @session
   end
 
   # use this with the router to call action_name (:index, :show, :create...)
