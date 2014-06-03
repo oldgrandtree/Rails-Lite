@@ -9,12 +9,10 @@ require_relative '../lib/rails_lite'
 server = WEBrick::HTTPServer.new :Port => 8080
 trap('INT') { server.shutdown }
 
-class MyController < ControllerBase[]
+class MyController < ControllerBase
   def go
-    render_content("hello world!", "text/html")
 
-    # after you have template rendering, uncomment:
-#    render :show
+    #render :show
 
     # after you have sessions going, uncomment:
 #    session["count"] ||= 0
