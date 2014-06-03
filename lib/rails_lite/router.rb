@@ -18,6 +18,7 @@ class Router
   attr_reader :routes
 
   def initialize
+    @routes = []
   end
 
   # simply adds a new route to the list of routes

@@ -9,8 +9,9 @@ class ControllerBase
 
   # setup the controller
   def initialize(req, res, route_params = {})
-    @req, @res, @params = req, res, route_params
+    @req, @res = req, res
     @session = Session.new(@req)
+    @params = Params.new(@req, route_params)
 
     #needed?
     @session.store_session(@res)
